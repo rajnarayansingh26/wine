@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Wine Classification Predictor</title>
+
+    <style>
+        body{
+            font-family: Arial, sans-serif;
+            background-color:#f4f4f4;
+            text-align:center;
+            margin-top:30px;
+        }
+
+        .container{
+            width:600px;
+            margin:auto;
+            background:white;
+            padding:20px;
+            border-radius:10px;
+            box-shadow:0px 0px 10px gray;
+        }
+
+        input{
+            width:90%;
+            padding:10px;
+            margin:5px;
+            border:1px solid #ccc;
+            border-radius:5px;
+        }
+
+        button{
+            background-color:green;
+            color:white;
+            padding:10px 20px;
+            border:none;
+            border-radius:5px;
+            cursor:pointer;
+            font-size:16px;
+        }
+
+        button:hover{
+            background-color:darkgreen;
+        }
+
+        #result{
+            margin-top:20px;
+            font-size:22px;
+            font-weight:bold;
+            color:blue;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Wine Classification Predictor</h1>
+
+    <input type="number" id="alcohol" placeholder="Alcohol" step="any">
+    <input type="number" id="malic_acid" placeholder="Malic Acid" step="any">
+    <input type="number" id="ash" placeholder="Ash" step="any">
+    <input type="number" id="alcalinity_of_ash" placeholder="Alcalinity of Ash" step="any">
+    <input type="number" id="magnesium" placeholder="Magnesium" step="any">
+    <input type="number" id="total_phenols" placeholder="Total Phenols" step="any">
+    <input type="number" id="flavanoids" placeholder="Flavanoids" step="any">
+    <input type="number" id="nonflavanoid_phenols" placeholder="Nonflavanoid Phenols" step="any">
+    <input type="number" id="proanthocyanins" placeholder="Proanthocyanins" step="any">
+    <input type="number" id="color_intensity" placeholder="Color Intensity" step="any">
+    <input type="number" id="hue" placeholder="Hue" step="any">
+    <input type="number" id="od280_od315" placeholder="OD280/OD315 of Diluted Wines" step="any">
+    <input type="number" id="proline" placeholder="Proline" step="any">
+
+    <br><br>
+
+    <button onclick="predictWine()">Predict</button>
+
+    <div id="result"></div>
+
+</div>
+
+<script>
+
+async function predictWine() {
+
+    const data = {
+        alcohol: parseFloat(document.getElementById("alcohol").value),
+        malic_acid: parseFloat(document.getElementById("malic_acid").value),
+        ash: parseFloat(document.getElementById("ash").value),
+        alcalinity_of_ash: parseFloat(document.getElementById("alcalinity_of_ash").value),
+        magnesium: parseFloat(document.getElementById("magnesium").value),
+        total_phenols: parseFloat(document.getElementById("total_phenols").value),
+        flavanoids: parseFloat(document.getElementById("flavanoids").value),
+        nonflavanoid_phenols: parseFloat(document.getElementById("nonflavanoid_phenols").value),
+        proanthocyanins: parseFloat(document.getElementById("proanthocyanins").value),
+        color_intensity: parseFloat(document.getElementById("color_intensity").value),
+        hue: parseFloat(document.getElementById("hue").value),
+        od280_od315: parseFloat(document.getElementById("od280_od315").value),
+        proline: parseFloat(document.getElementById("proline").value)
+    };
+
+    try {
+
+        const response = await fetch("/predict", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        console.log("Server Response:", result);
+
+        document.getElementById("result").innerHTML =
+            "Predicted Wine Class: " + result.prediction;
+
+    } catch (error) {
+
+        console.error(error);
+
+        document.getElementById("result").innerHTML =
+            "Error connecting to server";
+
+    }
+}
+
+</script>
+
+</body>
+</html>
